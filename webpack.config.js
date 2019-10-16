@@ -1,5 +1,6 @@
 
 const path = require('path');
+const webpack = require('webpack')
 module.exports = {
     entry: './src/index.js',
     output: {
@@ -33,5 +34,12 @@ module.exports = {
             }
         ]
     },
-    mode: 'development'
+    mode: 'development',
+    plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ],
+    devServer: {
+        contentBase: './dist',
+        hot: true,    // 设置启动的时候自动打开浏览器
+    }
 };
