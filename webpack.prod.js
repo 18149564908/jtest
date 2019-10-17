@@ -1,9 +1,10 @@
 
 const path = require('path');
-const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
-const HtmlWebpachPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpachPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 module.exports = {
     entry: './src/index.js',
     output: {
@@ -20,15 +21,41 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,// MiniCssExtractPlugin插件功能是与style-loader功能互斥的
-                    "css-loader",
+                    {
+                        loader: 'css-loader',
+                        options: { modules: true }
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: () => [
+                                require('autoprefixer')({
+                                    browsers: ['last 2 version', '>1%', 'ios 7']
+                                })
+                            ]
+                        }
+                    }
                 ]
             },
             {
                 test: /\.less$/,
                 use: [
                     MiniCssExtractPlugin.loader,// MiniCssExtractPlugin插件功能是与style-loader功能互斥的
-                    "css-loader",
-                    "less-loader"
+                    {
+                        loader: 'css-loader',
+                        options: { modules: true }
+                    },
+                    "less-loader",
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: () => [
+                                require('autoprefixer')({
+                                    browsers: ['last 2 version', '>1%', 'ios 7']
+                                })
+                            ]
+                        }
+                    }
                 ]
             },
             {
@@ -40,7 +67,7 @@ module.exports = {
                     
                     }
                 }
-            }
+            },
         ]
     },
     mode: 'production',
@@ -53,19 +80,26 @@ module.exports = {
             cssProcessor: require('cssnano')
         }),
         new HtmlWebpachPlugin({
-            template: path.join(__dirname, 'src/index.html'), // html模板所在位置
+            template: path.join(__dirname, 'public/index.html'), // html模板所在位置
             filename: 'index.html',  // 指定打包出来的html文件名称
-            // chunks: ['index'], // 指定html要使用哪些chunk
-            // inject: true,
-            // minify: {
-            //     html5: true,
-            //     collapseWhitespace: true,
-            //     preserveLineBreaks: false,
-            //     minifyCSS: true,
-            //     minifyJS: true,
-            //     removeComments: false,
-            // }
-        })
-    ]
+            chunks: ['vendors', 'main'], // 指定html要使用哪些chunk
+        }),
+        new CleanWebpackPlugin(),
+
+        new FriendlyErrorsWebpackPlugin()
+
+    ],
+    optimization: {
+        splitChunks: {
+            minSize: 0,
+            cacheGroups: {
+                commons: {
+                    test: /(react|react-dom)/,
+                    name: 'vendors',
+                    chunks:'all'
+                }
+            }
+        }
+    }
 
 };

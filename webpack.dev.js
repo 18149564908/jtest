@@ -1,6 +1,8 @@
 
 const path = require('path');
-const webpack = require('webpack')
+const webpack = require('webpack');
+const HtmlWebpachPlugin = require('html-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 module.exports = {
     entry: './src/index.js',
     output: {
@@ -17,16 +19,22 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     'style-loader',
-                    "css-loader",       // 先style-loader再css-loader
+                    // 先style-loader再css-loader
+                    { loader: 'css-loader'},
                 ]
             },
             {
                 test: /\.less$/,
-                use: [
-                    'style-loader',
-                    "css-loader",
-                    "less-loader"
-                ]
+                use: [{
+                    loader: "style-loader"
+                },{
+                    loader: "css-loader",
+                    options: {
+                        modules: true
+                    }
+                },{
+                    loader: "less-loader"
+                }]
             },
             {
                 test: /\.(png|gif|jpg|jpeg)$/,
@@ -36,7 +44,12 @@ module.exports = {
     },
     mode: 'development',
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new HtmlWebpachPlugin({
+            template: path.join(__dirname, 'public/index.html'), // html模板所在位置
+            filename: 'index.html',  // 指定打包出来的html文件名称
+        }),
+        new FriendlyErrorsWebpackPlugin()
     ],
     devServer: {
         contentBase: './dist',
