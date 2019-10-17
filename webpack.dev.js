@@ -35,7 +35,6 @@ module.exports = {
         ]
     },
     mode: 'development',
-
     plugins: [
         new webpack.HotModuleReplacementPlugin()
     ],
