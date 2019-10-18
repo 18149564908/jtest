@@ -1,3 +1,5 @@
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css'
@@ -9,7 +11,9 @@ class Index extends React.Component{
     render() {
         return (
             <div className={styles.test}>
-                <BasicLayout/>
+                <BasicLayout>
+                    sss
+                </BasicLayout>
             </div>
         )
     }

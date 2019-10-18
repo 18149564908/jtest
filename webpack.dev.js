@@ -54,5 +54,6 @@ module.exports = {
     devServer: {
         contentBase: './dist',
         hot: true,    // 设置启动的时候自动打开浏览器
+        disableHostCheck: true, //  新增该配置项
     }
 };
