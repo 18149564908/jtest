@@ -18,4 +18,6 @@ _记录过程记录在issues上_
 --------------------------------------------------------------------------------
 ### 引入antd,过程按官网来 <https://ant.design/docs/react/introduce-cn>
 
+>注：启用css modules会与antd冲突
 
+解决办法：Webpack 中针对 node_modules 中的依赖包单独写一个 loader 规则，不开启 css module ，并且给自己的代码打开 css module
