@@ -21,3 +21,62 @@ _记录过程记录在issues上_
 >注：启用css modules会与antd冲突
 
 解决办法：Webpack 中针对 node_modules 中的依赖包单独写一个 loader 规则，不开启 css module ，并且给自己的代码打开 css module
+
+```
+            {
+                test: /\.css$/,
+                exclude: [/node_modules/],
+                use: [
+                    'style-loader',
+                    {
+                        loader:'css-loader',
+                        options: {
+                            modules: true,
+                        }
+                    },
+                ]
+            },
+            // 针对antd与css modules冲突问题
+            {
+                test: /\.css$/,
+                exclude: [/src/],
+                use: [
+                    'style-loader',
+                    {
+                        loader:'css-loader',
+                        options: {
+                            // modules: true,
+                        }
+                    },
+                ]
+            },
+            {
+                test: /\.less$/,
+                exclude: [/node_modules/],
+                use: [
+                    'style-loader',
+                    {
+                        loader:'css-loader',
+                        options: {
+                            modules: true,
+                        }
+                    },
+                    'less-loader'
+                ]
+            },
+            // 针对antd与css modules冲突问题
+            {
+                test: /\.less$/,
+                exclude: [/src/],
+                use: [
+                    'style-loader',
+                    {
+                        loader:'css-loader',
+                        options: {
+                            // modules: true,
+                        }
+                    },
+                    'less-loader'
+                ]
+            },
+```
